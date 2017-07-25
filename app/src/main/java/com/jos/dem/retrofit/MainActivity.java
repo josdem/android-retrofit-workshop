@@ -10,6 +10,8 @@ import com.jos.dem.retrofit.service.JugoterapiaService;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,10 +20,22 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     JugoterapiaService jugoterapiaService = JugoterapiaService.retrofit.create(JugoterapiaService.class);
-    List<Category> call = jugoterapiaService.getCategories();
-    for(Category category: call){
-      Log.d("Category", category.getName());
-    }
+    Call<List<Category>> call = jugoterapiaService.getCategories();
+    call.enqueue(new Callback<List<Category>>() {
+
+      @Override
+      public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+        for(Category category: response.body()){
+          Log.d("category", category.toString());
+        }
+      }
+
+      @Override
+      public void onFailure(Call<List<Category>> call, Throwable t) {
+        Log.d("error", t.getMessage());
+      }
+    });
+
   }
 
 }
