@@ -30,4 +30,9 @@ public class Credentials {
     this.token = token;
   }
 
+  @Override
+  public String toString() {
+    return "name:" + this.name + " email:" + this.email + " token:" + this.token;
+  }
+
 }

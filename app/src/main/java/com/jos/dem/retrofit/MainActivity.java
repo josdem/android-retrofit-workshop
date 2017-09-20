@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.jos.dem.retrofit.model.Category;
+import com.jos.dem.retrofit.model.Credentials;
 import com.jos.dem.retrofit.service.JugoterapiaService;
 
 import java.util.List;
@@ -20,22 +21,31 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     JugoterapiaService jugoterapiaService = JugoterapiaService.retrofit.create(JugoterapiaService.class);
-    Call<List<Category>> call = jugoterapiaService.getCategories();
-    call.enqueue(new Callback<List<Category>>() {
+
+    Credentials credentials = createCredentials();
+
+    Call<Credentials> call = jugoterapiaService.sendCredentials(credentials);
+    call.enqueue(new Callback<Credentials>() {
 
       @Override
-      public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-        for(Category category: response.body()){
-          Log.d("category", category.toString());
-        }
+      public void onResponse(Call<Credentials> call, Response<Credentials> response) {
+        Log.d("credentials:", response.body().toString());
       }
 
       @Override
-      public void onFailure(Call<List<Category>> call, Throwable t) {
+      public void onFailure(Call<Credentials> call, Throwable t) {
         Log.d("error", t.getMessage());
       }
     });
 
+  }
+
+  private Credentials createCredentials() {
+    Credentials credentials = new Credentials();
+    credentials.setName("josdem");
+    credentials.setEmail("joseluis.delacruz@gmail.com");
+    credentials.setToken("token");
+    return credentials;
   }
 
 }
